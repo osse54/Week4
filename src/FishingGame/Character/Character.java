@@ -528,21 +528,26 @@ public class Character {
         Bait bait = chooseBait();
         if(bait == null) return;
         ItemBox baitBox = (ItemBox) belongings.getItemList().get(belongings.getItemList().indexOf(new ItemBox(bait)));
-        int amount = UtilClass.chooseAmount(baitBox.getNumberOfItem());
-        if(amount > baitBox.getNumberOfItem()) return;
+        int baitAmount = UtilClass.chooseAmount(baitBox.getNumberOfItem());
+        if(baitAmount > baitBox.getNumberOfItem()) return;
 
         UtilClass.say("뒤로가기를 누르면 자동 낚시가 취소됩니다.");
         Food food = chooseFood();
         if(food == null) return;
         ItemBox foodBox = (ItemBox) belongings.getItemList().get(belongings.getItemList().indexOf(new ItemBox(food)));
-        amount = UtilClass.chooseAmount(foodBox.getNumberOfItem());
-        if(amount > foodBox.getNumberOfItem()) return;
+        int foodAmount = UtilClass.chooseAmount(foodBox.getNumberOfItem());
+        if(foodAmount > foodBox.getNumberOfItem()) return;
 
         // 사용분 음식
-        baitBox.setNumberOfItem(baitBox.getNumberOfItem() - amount);
-        foodBox.setNumberOfItem(foodBox.getNumberOfItem() - amount);
-        ItemBox forUse = new ItemBox(bait, amount);
-        ItemBox forEat = new ItemBox(food, amount);
+        baitBox.setNumberOfItem(baitBox.getNumberOfItem() - baitAmount);
+        foodBox.setNumberOfItem(foodBox.getNumberOfItem() - foodAmount);
+        ItemBox forUse = new ItemBox(bait, baitAmount);
+        ItemBox forEat = new ItemBox(food, foodAmount);
+        belongings.refresh();
+        belongings.refresh();
+        belongings.refresh();
+        belongings.refresh();
+        belongings.refresh();
 
         if(forUse.getNumberOfItem() > 0) {
             Thread t = new Thread(new FishingRunnable(fishingRod, fishingPlace, this, fishes));
@@ -586,19 +591,17 @@ public class Character {
             }
         }
         ItemBox baitBox = (ItemBox) belongings.getItemList().get(belongings.getItemList().indexOf(new ItemBox(bait)));
-        int amount = UtilClass.chooseAmount(baitBox.getNumberOfItem());
+        int baitAmount = UtilClass.chooseAmount(baitBox.getNumberOfItem());
+        if(baitAmount > baitBox.getNumberOfItem()) return;
 
-        // 사용분 미끼
-        ItemBox forUse = new ItemBox(bait, amount);
 
         UtilClass.say("뒤로가기를 누르면 자동 낚시가 취소됩니다.");
         Food food = chooseFood();
         if(food == null) return;
         ItemBox foodBox = (ItemBox) belongings.getItemList().get(belongings.getItemList().indexOf(new ItemBox(food)));
-        amount = UtilClass.chooseAmount(foodBox.getNumberOfItem());
+        int foodAmount = UtilClass.chooseAmount(foodBox.getNumberOfItem());
+        if(foodAmount > foodBox.getNumberOfItem()) return;
 
-        // 사용분 음식
-        ItemBox forEat = new ItemBox(food, amount);
 
         // 사용할 낚시대들
         ArrayList<FishingRod> rods = new ArrayList<FishingRod>();
@@ -622,8 +625,16 @@ public class Character {
             }
         } while(rod != null);
 
-        baitBox.setNumberOfItem(baitBox.getNumberOfItem() - amount);
-        foodBox.setNumberOfItem(foodBox.getNumberOfItem() - amount);
+        // 사용분 미끼
+        ItemBox forUse = new ItemBox(bait, baitAmount);
+        // 사용분 음식
+        ItemBox forEat = new ItemBox(food, foodAmount);
+        baitBox.setNumberOfItem(baitBox.getNumberOfItem() - baitAmount);
+        foodBox.setNumberOfItem(foodBox.getNumberOfItem() - foodAmount);
+        belongings.refresh();
+        belongings.refresh();
+        belongings.refresh();
+        belongings.refresh();
 
         if(forUse.getNumberOfItem() > 0 && rods.size() > 0) {
             FishingRunnable.setBox(forUse, forEat);
