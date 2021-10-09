@@ -531,20 +531,17 @@ public class Character {
         int amount = UtilClass.chooseAmount(baitBox.getNumberOfItem());
         if(amount > baitBox.getNumberOfItem()) return;
 
-        baitBox.setNumberOfItem(baitBox.getNumberOfItem() - amount);
-
-        // 사용분 미끼
-        ItemBox forUse = new ItemBox(bait, amount);
-
         UtilClass.say("뒤로가기를 누르면 자동 낚시가 취소됩니다.");
         Food food = chooseFood();
         if(food == null) return;
         ItemBox foodBox = (ItemBox) belongings.getItemList().get(belongings.getItemList().indexOf(new ItemBox(food)));
         amount = UtilClass.chooseAmount(foodBox.getNumberOfItem());
         if(amount > foodBox.getNumberOfItem()) return;
-        foodBox.setNumberOfItem(foodBox.getNumberOfItem() - amount);
 
         // 사용분 음식
+        baitBox.setNumberOfItem(baitBox.getNumberOfItem() - amount);
+        foodBox.setNumberOfItem(foodBox.getNumberOfItem() - amount);
+        ItemBox forUse = new ItemBox(bait, amount);
         ItemBox forEat = new ItemBox(food, amount);
 
         if(forUse.getNumberOfItem() > 0) {
@@ -590,7 +587,6 @@ public class Character {
         }
         ItemBox baitBox = (ItemBox) belongings.getItemList().get(belongings.getItemList().indexOf(new ItemBox(bait)));
         int amount = UtilClass.chooseAmount(baitBox.getNumberOfItem());
-        baitBox.setNumberOfItem(baitBox.getNumberOfItem() - amount);
 
         // 사용분 미끼
         ItemBox forUse = new ItemBox(bait, amount);
@@ -600,7 +596,6 @@ public class Character {
         if(food == null) return;
         ItemBox foodBox = (ItemBox) belongings.getItemList().get(belongings.getItemList().indexOf(new ItemBox(food)));
         amount = UtilClass.chooseAmount(foodBox.getNumberOfItem());
-        foodBox.setNumberOfItem(foodBox.getNumberOfItem() - amount);
 
         // 사용분 음식
         ItemBox forEat = new ItemBox(food, amount);
@@ -626,6 +621,9 @@ public class Character {
                 }
             }
         } while(rod != null);
+
+        baitBox.setNumberOfItem(baitBox.getNumberOfItem() - amount);
+        foodBox.setNumberOfItem(foodBox.getNumberOfItem() - amount);
 
         if(forUse.getNumberOfItem() > 0 && rods.size() > 0) {
             FishingRunnable.setBox(forUse, forEat);
